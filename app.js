@@ -1,6 +1,6 @@
 const express = require('express')
 
-const { sequelize, User, Genre } = require('./models')
+const { sequelize, User, Genre, Instrument } = require('./models')
 const user = require('./models/user')
 
 const app = express()
@@ -35,7 +35,7 @@ app.get('/users/:oidc', async (req, res) => {
     try {
         const users = await User.findOne({
             where: { oidc },
-            include: 'genres',
+            include: ['genres', 'instruments'],
         })
 
         return res.json(users)
@@ -112,6 +112,40 @@ app.get('/genres', async (req, res) => {
         })
 
         return res.json(genres)
+    } catch(err) {
+        console.log(err)
+        return res.status(500).json(err)
+    }
+})
+
+app.post('/instruments', async (req, res) => {
+    const { userOidc, name } = req.body
+    try {
+        const user = await User.findOne({
+            where: { oidc: userOidc }
+        })
+
+        const instrument = await Instrument.create({
+            name, userOidc: user.oidc
+        })
+
+        return res.json(instrument)
+    } catch(err) {
+        console.log(err)
+        return res.status(500).json(err)
+    }
+})
+
+app.get('/instruments', async (req, res) => {
+    const { userOidc, name } = req.body
+    try {
+        const instruments = await Instrument.findAll({
+            // if you need multiple associations
+            // you pass an array and then you pass user and the other ones
+            include: ['user']
+        })
+
+        return res.json(instruments)
     } catch(err) {
         console.log(err)
         return res.status(500).json(err)

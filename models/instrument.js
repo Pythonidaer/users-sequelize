@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Genre extends Model {
+  class Instrument extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -21,13 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       return { ...this.get(), uuid: undefined, id: undefined, userOidc: undefined }
     }
   };
-  // I think for MVP we should have One:One
-  // It seems easiest to have one genre record per user with all genres
-  // Search should be able to parse with regex to find phrases
-  // In the future, we could change this to a One:Many relationship
-  // That might look like a user checking boxes in a word bank
-  // I think Ryan mentioned this early on, it's a good idea
-  Genre.init(
+  Instrument.init(
     {
       uuid: {
         type: DataTypes.UUID,
@@ -43,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
       }
     }, {
     sequelize,
-    tableName: 'genres',
-    modelName: 'Genre',
+    tableName: 'instruments',
+    modelName: 'Instrument',
   });
-  return Genre;
+  return Instrument;
 };

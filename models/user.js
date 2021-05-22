@@ -9,13 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Genre }) {
+    static associate({ Genre, Instrument }) {
       // define association here
       this.hasOne(Genre, { foreignKey: 'userOidc', as: 'genres' })
+      this.hasOne(Instrument, { foreignKey: 'userOidc', as: 'instruments' })
     }
 
     toJSON() {
-      return { ...this.get(), uuid: undefined, createdAt: undefined, updatedAt: undefined }
+      return { ...this.get(), uuid: undefined }
     }
   };
   User.init({
@@ -77,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    freezeTableName: true,
+    // freezeTableName: true,
     // underscored: true,
     tableName: 'users',
     modelName: 'User',
